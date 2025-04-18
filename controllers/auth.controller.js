@@ -25,7 +25,6 @@ export const signUp = async (req, res, next) => {
       [{ name, email, password: hashedPassword }],
       { session }
     );
-
     const token = jwt.sign({ userId: newUsers[0]._id }, JWT_SECRET, {
       expiresIn: JWT_EXPIRES,
     });

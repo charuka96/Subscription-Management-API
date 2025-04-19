@@ -1,10 +1,8 @@
 const errorMedleware = (err, req, res, next) => {
   try {
     let error = { ...err };
-
     error.message = err.message;
     console.log(err);
-
 
     //mongoose bad objectID
     if (err.name === "CastError") {
@@ -20,17 +18,16 @@ const errorMedleware = (err, req, res, next) => {
       error.statusCode = 400;
     }
 
-    //mongoose dublicate key
-    if (err.code === 'ValidationError') {
-      const message = Object.values(err.errors).map(val=>val.message)
-      error = new Error(message.join(','));
+    //mongoose ValidationError
+    if (err.code === "ValidationError") {
+      const message = Object.values(err.errors).map((val) => val.message);
+      error = new Error(message.join(","));
       error.statusCode = 400;
     }
 
-
-
-res.status(error.statusCode||500).json({sucsess:false,error:error.message||'Server Error'})
-
+    res
+      .status(error.statusCode || 500)
+      .json({ sucsess: false, error: error.message || "Server Error" });
   } catch (error) {
     next(error);
   }
